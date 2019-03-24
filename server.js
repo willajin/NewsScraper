@@ -1,19 +1,19 @@
 // dependencies
-var express = require("express");
-var mongoose = require("mongoose");
-var logger = require("morgan");
+const express = require("express");
+const mongoose = require("mongoose");
+const logger = require("morgan");
 
 // scraping tools
-var axios = require("axios");
-var cheerio = require("cheerio");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 // require models
-var db = require("./models");
+const db = require("./models");
 
-var PORT = 3000;
+const PORT = 3000;
 
 // initialize express
-var app = express();
+const app = express();
 
 // set up middleware
 app.use(logger("dev"));
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // set up handlebars
-var exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
@@ -30,12 +30,17 @@ app.set("view engine", "handlebars");
 mongoose.connect("mongodb://localhost/Week18Homework", { useNewUrlParser: true });
 
 // routes
+// GET route to display index
+app.get("/", function (req, res) {
+    res.render("index");
+});
+
 // GET route to scrape news website
 app.get("/scrape", function (req, res) {
     // axios
     axios.get("https://www.vox.com/").then(function (response) {
         // load to cheerio
-        var $ = cheerio.load(response.data);
+        const $ = cheerio.load(response.data);
 
         // grab tag in article to save properties
         $(".c-entry-box--compact__title").each(function (i, element) {
@@ -46,7 +51,7 @@ app.get("/scrape", function (req, res) {
                 .children("a")
                 .text();
             if ($(this).parent().children('p').text()) {
-                result.summary = $(this).parent().children('p').text()
+                result.summary = $(this).parent().children('p').text();
             }
             result.url = $(this)
                 .children("a")
@@ -70,7 +75,7 @@ app.get("/scrape", function (req, res) {
 app.get("/articles", function (req, res) {
     db.Article.find({})
         .then(function (dbArticle) {
-            res.json(dbArticle);
+            res.render("index", { dbArticle });
         })
         .catch(function (err) {
             res.json(err);

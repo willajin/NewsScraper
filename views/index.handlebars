@@ -1,4 +1,16 @@
 <div class="container">
-    <h1>News Scraper</h1>
+    <div class="row">
+        <h1>News Scraper</h1>
+    </div>
+
+    <div class="row">
+        <div id="articles">
+            {{#each dbArticle}}
+            <p>{{this.headline}}</p>
+            <p>{{this.summary}}</p>
+            <p>{{this.url}}</p>
+            {{/each}}
+        </div>
+    </div>
 
 </div> <!-- end container div -->
