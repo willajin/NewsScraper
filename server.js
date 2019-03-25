@@ -2,6 +2,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+const exphbs = require("express-handlebars");
+const bodyParser = require("body-parser");
+const request = require('request');
 
 // scraping tools
 const axios = require("axios");
@@ -17,12 +20,12 @@ const app = express();
 
 // set up middleware
 app.use(logger("dev"));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // set up handlebars
-const exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
@@ -50,9 +53,10 @@ app.get("/scrape", function (req, res) {
             result.headline = $(this)
                 .children("a")
                 .text();
-            if ($(this).parent().children('p').text()) {
-                result.summary = $(this).parent().children('p').text();
-            }
+            result.summary = $(this)
+                .parent()
+                .children('p')
+                .text();
             result.url = $(this)
                 .children("a")
                 .attr("href");
@@ -67,7 +71,7 @@ app.get("/scrape", function (req, res) {
                 });
         });
 
-        res.send("Scrape complete.");
+        res.redirect("/articles");
     });
 });
 

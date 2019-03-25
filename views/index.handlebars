@@ -4,12 +4,17 @@
     </div>
 
     <div class="row">
-        <div id="articles">
-            {{#each dbArticle}}
-            <p>{{this.headline}}</p>
-            <p>{{this.summary}}</p>
-            <p>{{this.url}}</p>
-            {{/each}}
+        <div class="col s6">
+            <div id="articles">
+                {{#each dbArticle}}
+                <p data-id={{_id}}>{{headline}}</p>
+                <p>{{summary}}</p>
+                <p>{{url}}</p>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col s6">
+            <div id="notes"></div>
         </div>
     </div>
 
